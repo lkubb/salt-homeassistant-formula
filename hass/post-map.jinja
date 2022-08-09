@@ -1,0 +1,61 @@
+{#- -*- coding: utf-8 -*- #}
+{#- vim: ft=jinja #}
+
+{#- Make this file importable by config/file.sls -#}
+{%- set mapdata = mapdata | d(hass) %}
+
+{#-
+    Convenience: Make relative paths absolute.
+-#}
+
+{%- set base_path = mapdata.lookup.paths.base %}
+{%- for path, val in mapdata.lookup.paths.items() %}
+  {%- if val and val is string and not val.startswith("/") %}
+    {%- do mapdata.lookup.paths.update({path: base_path | path_join(val)}) %}
+  {%- endif %}
+{%- endfor %}
+
+{%- if not mapdata.lookup.user.home %}
+  {%- do mapdata.lookup.user.update({"home": base_path}) %}
+{%- endif %}
+
+{#-
+    Automatically generate secrets if they were not specified.
+    Automatically parse db connection string if necessary.
+-#}
+
+{%- if mapdata.db.type != "sqlite" %}
+  {%- if not mapdata.db.password and not mapdata.db.password_pillar %}
+    {#- This has been deprecated and will be removed in v3005 @FIXME -#}
+    {%- do mapdata.db.update({
+      "password": salt["grains.get_or_set_hash"](
+                        'hass.db.password',
+                        length=64,
+                        chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+                  )
+      })
+    %}
+  {%- endif %}
+  {%- set db_fmt = {
+    "mariadb": "mysql://{user}:{password}@127.0.0.1/{name}?charset=utf8mb4",
+    "mariadb_socket": "mysql://{user}:{password}@localhost/{name}?unix_socket=/var/run/mysqld/mysqld.sock&charset=utf8mb4",
+    "postgres": "postgresql://{user}:{password}@127.0.0.1/{name}",
+    "postgres_socket": "postgresql://@/{name}",
+    }.get(mapdata.db.type ~ ("_socket" if mapdata.db.socket else ""), "") %}
+  {%- set db_url = db_fmt.format(name=mapdata.db.name, user=mapdata.db.user, password=mapdata.db.password or salt["pillar.get"](mapdata.db.password_pillar, "")) %}
+{%- endif %}
+
+{%- if mapdata.influxdb.install %}
+  {%- for secret in ["admin_token", "password"] %}
+    {%- if not mapdata.influxdb.db_init[secret] and not mapdata.influxdb.db_init[secret ~ "_pillar"] %}
+      {%- do mapdata.influxdb.db_init.update({
+        secret: salt["grains.get_or_set_hash"](
+                          'hass.influxdb.db_init.' ~ secret,
+                          length=64,
+                          chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+                    )
+        })
+      %}
+    {%- endif %}
+  {%- endfor %}
+{%- endif %}

@@ -1,0 +1,127 @@
+{
+  "template": "https://github.com/lkubb/salt-template-formula-compose",
+  "commit": "c5351b98a6ab88feb768fe27bbcad6b148c56910",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "_extensions": [
+        "local_extensions.YAMLDumper"
+      ],
+      "_jinja2_env_vars": {
+        "block_start_string": "{!",
+        "block_end_string": "!}",
+        "variable_start_string": "{=",
+        "variable_end_string": "=}",
+        "comment_start_string": "{@",
+        "comment_end_string": "@}"
+      },
+      "name": "Home Assistant",
+      "abbr": "hass",
+      "abbr_pysafe": "hass",
+      "project_name": "homeassistant",
+      "containers": "homeassistant,influxdb,mariadb,postgres",
+      "git_username": "lkubb",
+      "_lookup": {
+        "compose": {
+          "create_pod": false
+        },
+        "containers": {
+          "homeassistant": {
+            "image": "ghcr.io/home-assistant/home-assistant:stable"
+          },
+          "influxdb": {
+            "image": "docker.io/library/influxdb:latest"
+          },
+          "mariadb": {
+            "image": "docker.io/library/mariadb:latest"
+          },
+          "postgres": {
+            "image": "docker.io/library/postgres:latest"
+          }
+        },
+        "hacs": {
+          "hash": "",
+          "repo": "hacs/integration"
+        },
+        "paths": {
+          "config": "config",
+          "influxdb_config": "influxdb_config",
+          "influxdb_data": "influxdb_data",
+          "mariadb": "mariadb",
+          "postgres": "postgres"
+        },
+        "user": {
+          "groups": [
+            "dialout"
+          ]
+        }
+      },
+      "_settings": {
+        "config_base": {
+          "default_config": null,
+          "homeassistant": {
+            "name": "Home Assistant",
+            "latitude": 0,
+            "longitude": 0,
+            "elevation": 0,
+            "unit_system": "metric",
+            "currency": "USD",
+            "time_zone": "Etc/UTC",
+            "allowlist_external_dirs": []
+          },
+          "automation": "!include automations.yaml",
+          "script": "!include scripts.yaml",
+          "scene": "!include scenes.yaml"
+        },
+        "config_management": {
+          "config_template_lang": null,
+          "manage_base_config": false,
+          "secrets_manage": true,
+          "secrets_pillar": ""
+        },
+        "container": {
+          "devices": []
+        },
+        "db": {
+          "type": "sqlite",
+          "name": "hass",
+          "user": "hass",
+          "password": null,
+          "password_pillar": null,
+          "socket": false
+        },
+        "hacs": {
+          "apply_yaml_config": false,
+          "config": {
+            "token": "!secret github_token",
+            "sidepanel_title": "Community",
+            "sidepanel_icon": "mdi:alpha-c-box",
+            "appdaemon": true,
+            "netdaemon": true,
+            "country": null,
+            "release_limit": 5,
+            "experimental": false
+          },
+          "install": true
+        },
+        "influxdb": {
+          "install": false,
+          "config": {},
+          "db_init": {
+            "user": "hass",
+            "password": null,
+            "password_pillar": null,
+            "org": "hass",
+            "bucket": "hass",
+            "retention": null,
+            "admin_token": null,
+            "admin_token_pillar": null
+          }
+        },
+        "salt_mod_github_releases": true
+      },
+      "_template": "https://github.com/lkubb/salt-template-formula-compose"
+    }
+  },
+  "directory": null
+}

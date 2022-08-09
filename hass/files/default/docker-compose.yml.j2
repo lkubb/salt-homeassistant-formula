@@ -1,0 +1,109 @@
+{%- set misc_volumes = [] %}
+{%- if hass.db.type != "sqlite" %}
+{%-   if "mysql" == hass.db.type %}
+{%-     if not hass.lookup.paths.mariadb %}
+{%-       do misc_volumes.append("hass-mariadb") %}
+{%-     endif %}
+{%-     if hass.db.socket %}
+{%-       set db_run_dir = "/var/run/mysqld" %}
+{%-     endif %}
+{%-   elif "postgres" == hass.db.type %}
+{%-     if not hass.lookup.paths.postgres %}
+{%-       do misc_volumes.append("hass-postgres") %}
+{%-     endif %}
+{%-     if hass.db.socket %}
+{%-       set db_run_dir = "/var/run/postgresql" %}
+{%-     endif %}
+{%-   endif %}
+{%-   if hass.influxdb.install and not hass.lookup.paths.influxdb_data %}
+{%-     do misc_volumes.append("hass-influxdb") %}
+{%-   endif %}
+{%-   if hass.db.socket %}
+{%-     do misc_volumes.append("hass-db-run") %}
+{%-   endif %}
+{%- endif %}
+---
+version: '3'
+services:
+  homeassistant:
+    container_name: homeassistant
+    image: {{ hass.lookup.containers.homeassistant.image }}
+    env_file:
+      - {{ hass.lookup.paths.config_homeassistant }}
+    volumes:
+      - {{ hass.lookup.paths.config }}:/config
+      - /etc/localtime:/etc/localtime:ro
+{%-   if hass.db.type != "sqlite" and hass.db.socket %}
+      - hass-db-run:{{ db_run_dir }}
+{%-   endif %}
+    restart: unless-stopped
+    # this is required for device/service discovery to work
+    # (broadcast traffic is not forwarded)
+    # an alternative is possible with macvlan
+    # otherwise, mapping port 8123 would suffice
+    network_mode: host
+    devices: {{ hass.container.devices | json }}
+{%- if "sqlite" != hass.db.type %}
+    depends_on:
+      - {{ hass.db.type }}
+{%- endif %}
+
+{%- if hass.influxdb.install %}
+
+  influxdb:
+    image: {{ hass.lookup.containers.influxdb.image }}
+    hostname: influxdb
+    env_file:
+      - {{ hass.lookup.paths.config_influxdb }}
+    volumes:
+      - {{ hass.lookup.paths.influxdb_config }}:/etc/influxdb2
+      - {{ hass.lookup.paths.influxdb_data or "hass-influxdb" }}:/var/lib/influxdb2
+    ports:
+      - 127.0.0.1:8086:8086
+{%- endif %}
+
+{%- if "mariadb" == hass.db.type %}
+
+  mariadb:
+    image: {{ hass.lookup.containers.mariadb.image }}
+    hostname: mariadb
+    restart: unless-stopped
+    env_file:
+      - {{ hass.lookup.paths.config_mariadb }}
+    volumes:
+      - {{ hass.lookup.paths.mariadb or "hass-mariadb" }}:/var/lib/mysql
+{%-   if hass.db.socket %}
+      - hass-db-run:{{ db_run_dir }}
+{%-   else %}
+    ports:
+      - 127.0.0.1:3306:3306
+{%-   endif %}
+
+{%- elif "postgres" == hass.db.type %}
+
+  postgres:
+    image: {{ hass.lookup.containers.postgres.image }}
+    hostname: postgres
+    restart: unless-stopped
+    env_file:
+      - {{ hass.lookup.paths.config_postgres }}
+    volumes:
+      - {{ hass.lookup.paths.postgres or "hass-postgres" }}:/var/lib/postgresql/data
+{%-   if hass.db.socket %}
+      - hass-db-run:{{ db_run_dir }}
+{%-   else %}
+    ports:
+      - 127.0.0.1:5432:5432
+{%-   endif %}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+{%- endif %}
+
+{%- if misc_volumes %}
+
+volumes:
+{%-   for volume in volumes %}
+  {{ volume }}:
+    name: {{ volume }}
+{%-   endfor %}
+{%- endif %}

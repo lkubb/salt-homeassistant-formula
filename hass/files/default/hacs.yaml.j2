@@ -1,0 +1,10 @@
+{%- macro render_item(item, indent_width=0) %}
+{%-   if item is mapping %}
+{%-     for var, val in item.items() %}
+{{ ' ' * indent_width ~ var }}: {{ render_item(val, indent_width + 2) }}
+{%-     endfor %}
+{%-   elif item is string and item.startswith("!") %}{{ item }}
+{%-   else %}{{ item | json }}
+{%-   endif %}
+{%- endmacro -%}
+{{ render_item(hass.hacs.config) }}

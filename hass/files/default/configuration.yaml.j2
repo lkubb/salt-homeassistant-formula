@@ -1,0 +1,35 @@
+{%- macro render_item(item, indent_width=0) %}
+{%-   if item is mapping %}
+{%-     for var, val in item.items() %}
+{{ ' ' * indent_width ~ var }}: {{ render_item(val, indent_width + 2) }}
+{%-     endfor %}
+{%-   elif item is string and item.startswith("!") %}{{ item }}
+{%-   else %}{{ item | json }}
+{%-   endif %}
+{%- endmacro -%}
+{{ render_item(hass.config_base) }}
+
+{%- if hass.hacs.install and hass.hacs.apply_yaml_config %}
+
+hacs: !include hacs.yaml
+{%- endif %}
+
+{%- if hass.db.type != "sqlite" %}
+
+recorder:
+  db_url: {{ "!secret db_url" if hass.config_management.secrets_manage else db_url }}
+{%- endif %}
+
+{%- if hass.influxdb.install %}
+
+influxdb:
+  api_version: '2'
+  host: localhost
+  port: 8086
+  token: {{ "!secret influx_token" if hass.config_management.secrets_manage else hass.influxdb.db_init.admin_token or salt["pillar.get"](hass.influxdb.db_init.admin_token_pillar) }}
+  organization: {{ hass.influxdb.db_init.org }}
+  bucket: {{ hass.influxdb.db_init.bucket }}
+  ssl: false
+  max_retries: 3
+  default_measurement: state
+{%- endif %}
