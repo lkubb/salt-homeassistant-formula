@@ -10,7 +10,8 @@ include:
   - {{ sls_hacs_installed }}
 
 HACS YAML configuration is managed:
-  - name: {{ hass.lookup.paths.config | path_join("hacs.yaml") }}
+  file.managed:
+    - name: {{ hass.lookup.paths.config | path_join("hacs.yaml") }}
     - source: {{ files_switch(["hacs.yaml", "hacs.yaml.j2"],
                               lookup='HACS YAML configuration is managed',
                  )
