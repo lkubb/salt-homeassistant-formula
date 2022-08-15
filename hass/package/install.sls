@@ -5,13 +5,15 @@
 {%- from tplroot ~ "/map.jinja" import mapdata as hass with context %}
 {%- from tplroot ~ "/libtofs.jinja" import files_switch with context %}
 
+{%- set extmod_list = salt["saltutil.list_extmods"]() %}
+
 Custom modules are present for hass:
   saltutil.sync_all:
     - refresh: true
     - unless:
-      - {{ "compose" in salt["saltutil.list_extmods"]() }}
+      - {{ "compose" in extmod_list.get("states", []) }}
 {%- if hass.salt_mod_github_releases %}
-      - {{ "github_releases" in salt["saltutil.list_extmods"]() }}
+      - {{ "github_releases" in extmod_list.get("states", []) }}
 {%- endif %}
 
 Home Assistant user account is present:
