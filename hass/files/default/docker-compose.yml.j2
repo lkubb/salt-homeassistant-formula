@@ -43,6 +43,10 @@ services:
     # otherwise, mapping port 8123 would suffice
     network_mode: host
     devices: {{ hass.container.devices | json }}
+{%- if hass.install.autoupdate %}
+    labels:
+      - io.containers.autoupdate=registry
+{%- endif %}
 {%- if "sqlite" != hass.db.type %}
     depends_on:
       - {{ hass.db.type }}
@@ -60,6 +64,10 @@ services:
       - {{ hass.lookup.paths.influxdb_data or "hass-influxdb" }}:/var/lib/influxdb2
     ports:
       - 127.0.0.1:8086:8086
+{%-   if hass.install.autoupdate %}
+    labels:
+      - io.containers.autoupdate=registry
+{%-   endif %}
 {%- endif %}
 
 {%- if "mariadb" == hass.db.type %}
@@ -70,6 +78,10 @@ services:
     restart: unless-stopped
     env_file:
       - {{ hass.lookup.paths.config_mariadb }}
+{%-   if hass.install.autoupdate %}
+    labels:
+      - io.containers.autoupdate=registry
+{%-   endif %}
     volumes:
       - {{ hass.lookup.paths.mariadb or "hass-mariadb" }}:/var/lib/mysql
 {%-   if hass.db.socket %}
@@ -87,6 +99,10 @@ services:
     restart: unless-stopped
     env_file:
       - {{ hass.lookup.paths.config_postgres }}
+{%-   if hass.install.autoupdate %}
+    labels:
+      - io.containers.autoupdate=registry
+{%-   endif %}
     volumes:
       - {{ hass.lookup.paths.postgres or "hass-postgres" }}:/var/lib/postgresql/data
 {%-   if hass.db.socket %}

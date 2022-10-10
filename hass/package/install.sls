@@ -82,3 +82,15 @@ Home Assistant is installed:
     - require:
       - user: {{ hass.lookup.user.name }}
 {%- endif %}
+
+{%- if hass.install.autoupdate_service is not none %}
+
+Podman autoupdate service is managed for Home Assistant:
+{%-   if hass.install.rootless %}
+  compose.systemd_service_{{ "enabled" if hass.install.autoupdate_service else "disabled" }}:
+    - user: {{ hass.lookup.user.name }}
+{%-   else %}
+  service.{{ "enabled" if hass.install.autoupdate_service else "disabled" }}:
+{%-   endif %}
+    - name: podman-auto-update.timer
+{%- endif %}

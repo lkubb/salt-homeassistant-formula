@@ -56,6 +56,8 @@ hass:
       repo: hacs/integration
   install:
     rootless: true
+    autoupdate: true
+    autoupdate_service: false
     remove_all_data_for_sure: false
   config_base:
     automation: '!include automations.yaml'

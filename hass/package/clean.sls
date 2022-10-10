@@ -8,6 +8,18 @@
 include:
   - {{ sls_config_clean }}
 
+{%- if hass.install.autoupdate_service %}
+
+Podman autoupdate service is disabled for Home Assistant:
+{%-   if hass.install.rootless %}
+  compose.systemd_service_disabled:
+    - user: {{ hass.lookup.user.name }}
+{%-   else %}
+  service.disabled:
+{%-   endif %}
+    - name: podman-auto-update.timer
+{%- endif %}
+
 Home Assistant is absent:
   compose.removed:
     - name: {{ hass.lookup.paths.compose }}
