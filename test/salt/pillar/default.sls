@@ -12,6 +12,9 @@ hass:
       pod_args: null
       project_name: homeassistant
       remove_orphans: true
+      build: false
+      build_args: null
+      pull: false
       service:
         container_prefix: null
         ephemeral: true
@@ -39,8 +42,6 @@ hass:
       shell: /usr/sbin/nologin
       uid: null
       gid: null
-    compose:
-      create_pod: false
     containers:
       homeassistant:
         image: ghcr.io/home-assistant/home-assistant:stable
