@@ -76,6 +76,7 @@ hass:
   config_management:
     config_template_lang: null
     manage_base_config: false
+    secrets: {}
     secrets_manage: true
     secrets_pillar: ''
   container:
@@ -103,6 +104,7 @@ hass:
     config: {}
     db_init:
       admin_token: null
+      admin_token_pillar: null
       bucket: hass
       org: hass
       password: null

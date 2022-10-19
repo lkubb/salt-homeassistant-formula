@@ -157,14 +157,32 @@ Home Assistant managed secrets are synced:
 {%-   endif %}
 {%- endif %}
 
-{%- if hass.config_management.secrets_pillar %}
+{%- if hass.config_management.secrets %}
 
 Home Assistant secrets are synced:
   file.serialize:
     - name: {{ hass.lookup.paths.config | path_join("secrets.yaml") }}
-    - dataset_pillar: {{ hass.config_management.secrets_pillar }}
     - serializer: yaml
     - merge_if_exists: {{ hass.config_management.secrets_manage }}
+    - mode: '0640'
+    - user: {{ hass.lookup.user.name }}
+    - group: {{ hass.lookup.user.name }}
+    - makedirs: True
+    - require:
+      - user: {{ hass.lookup.user.name }}
+    - watch_in:
+      - Home Assistant is installed
+    - dataset: {{ hass.config_management.secrets | json }}
+{%- endif %}
+
+{%- if hass.config_management.secrets_pillar %}
+
+Home Assistant secrets are synced from pillar:
+  file.serialize:
+    - name: {{ hass.lookup.paths.config | path_join("secrets.yaml") }}
+    - dataset_pillar: {{ hass.config_management.secrets_pillar }}
+    - serializer: yaml
+    - merge_if_exists: {{ (hass.config_management.secrets_manage or hass.config_management.secrets) | to_bool }}
     - mode: '0640'
     - user: {{ hass.lookup.user.name }}
     - group: {{ hass.lookup.user.name }}

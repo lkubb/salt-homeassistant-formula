@@ -49,6 +49,9 @@ hass:
       # secrets.yaml. This currently applies to database passwords.
       # It provides `db_url` and `influx_token` values.
     secrets_manage: true
+      # Mapping of secrets to pull into secrets.yaml. Will be merged with
+      # values from secret_pillar.
+    secrets: {}
       # This formula can pull secrets.yaml values from a pillar value. Specify where
       # to look for them (in typical Salt notation, some:pillar:value).
     secrets_pillar: ''
