@@ -21,5 +21,6 @@ Home Assistant environment files are absent:
 {%- if hass.install.remove_all_data_for_sure %}
       - {{ hass.lookup.paths.config }}
 {%- endif %}
+      - {{ hass.lookup.paths.base | path_join(".saltcache.yml") }}
     - require:
       - sls: {{ sls_service_clean }}
