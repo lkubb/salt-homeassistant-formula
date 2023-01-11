@@ -21,21 +21,46 @@
 
 {#-
     Automatically generate secrets if they were not specified.
+-#}
+
+{#- Since grains.get_or_set_hash was removed in v3005, cache generated secrets -#}
+{%- set current_cached = {} -%}
+{%- set cache_updated = [] -%}
+{%- set cache_file = mapdata.lookup.paths.base | path_join(".saltcache.yml") -%}
+{%- if salt["file.file_exists"](cache_file) -%}
+  {%- do current_cached.update(salt["jinja.import_yaml"](cache_file)) -%}
+{%- else -%}
+  {%- do salt["file.mkdir"](mapdata.lookup.paths.base) -%}
+{%- endif -%}
+
+{%- for var, val in current_cached.items() -%}
+  {%- do mapdata | set_dict_key_value(var, val) -%}
+{%- endfor -%}
+
+{%- for secret, enabled in [
+      ("db:password", mapdata.db.type != "sqlite"),
+      ("influxdb:db_init:admin_token", mapdata.influxdb.install),
+      ("influxdb:db_init:password", mapdata.influxdb.install),
+    ] -%}
+  {%- if enabled and not mapdata | traverse(secret) and not mapdata | traverse(secret ~ "_pillar") -%}
+    {%- do current_cached.update({secret: salt["random.get_str"](64, punctuation=false)}) -%}
+    {%- do cache_updated.append(true) -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- if cache_updated -%}
+  {%- for var, val in current_cached.items() -%}
+    {%- do mapdata | set_dict_key_value(var, val) -%}
+  {%- endfor -%}
+  {%- do salt["file.write"](cache_file, salt["slsutil.serialize"]("yaml", current_cached)) -%}
+  {%- do salt["file.set_mode"](cache_file, "0600") -%}
+{%- endif -%}
+
+{#-
     Automatically parse db connection string if necessary.
 -#}
 
 {%- if mapdata.db.type != "sqlite" %}
-  {%- if not mapdata.db.password and not mapdata.db.password_pillar %}
-    {#- This has been deprecated and will be removed in v3005 @FIXME -#}
-    {%- do mapdata.db.update({
-      "password": salt["grains.get_or_set_hash"](
-                        'hass.db.password',
-                        length=64,
-                        chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-                  )
-      })
-    %}
-  {%- endif %}
   {%- set db_fmt = {
     "mariadb": "mysql://{user}:{password}@127.0.0.1/{name}?charset=utf8mb4",
     "mariadb_socket": "mysql://{user}:{password}@localhost/{name}?unix_socket=/var/run/mysqld/mysqld.sock&charset=utf8mb4",
@@ -43,19 +68,4 @@
     "postgres_socket": "postgresql://@/{name}",
     }.get(mapdata.db.type ~ ("_socket" if mapdata.db.socket else ""), "") %}
   {%- set db_url = db_fmt.format(name=mapdata.db.name, user=mapdata.db.user, password=mapdata.db.password or salt["pillar.get"](mapdata.db.password_pillar, "")) %}
-{%- endif %}
-
-{%- if mapdata.influxdb.install %}
-  {%- for secret in ["admin_token", "password"] %}
-    {%- if not mapdata.influxdb.db_init[secret] and not mapdata.influxdb.db_init[secret ~ "_pillar"] %}
-      {%- do mapdata.influxdb.db_init.update({
-        secret: salt["grains.get_or_set_hash"](
-                          'hass.influxdb.db_init.' ~ secret,
-                          length=64,
-                          chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-                    )
-        })
-      %}
-    {%- endif %}
-  {%- endfor %}
 {%- endif %}
