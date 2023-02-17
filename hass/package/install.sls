@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # vim: ft=sls
 
-{%- set tplroot = tpldir.split('/')[0] %}
+{%- set tplroot = tpldir.split("/")[0] %}
 {%- from tplroot ~ "/map.jinja" import mapdata as hass with context %}
 {%- from tplroot ~ "/libtofs.jinja" import files_switch with context %}
 
@@ -46,11 +45,28 @@ Home Assistant paths are present:
     - require:
       - user: {{ hass.lookup.user.name }}
 
+{%- if hass.install.podman_api %}
+
+Home Assistant podman API is enabled:
+  compose.systemd_service_enabled:
+    - name: podman
+    - user: {{ hass.lookup.user.name }}
+    - require:
+      - Home Assistant user session is initialized at boot
+
+Home Assistant podman API is available:
+  compose.systemd_service_running:
+    - name: podman
+    - user: {{ hass.lookup.user.name }}
+    - require:
+      - Home Assistant user session is initialized at boot
+{%- endif %}
+
 Home Assistant compose file is managed:
   file.managed:
     - name: {{ hass.lookup.paths.compose }}
-    - source: {{ files_switch(['docker-compose.yml', 'docker-compose.yml.j2'],
-                              lookup='Home Assistant compose file is present'
+    - source: {{ files_switch(["docker-compose.yml", "docker-compose.yml.j2"],
+                              lookup="Home Assistant compose file is present"
                  )
               }}
     - mode: '0644'

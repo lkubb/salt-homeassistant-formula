@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # vim: ft=yaml
 ---
 hass:
@@ -8,7 +7,7 @@ hass:
     winner: lookup
     added_in_lookup: lookup_value
     compose:
-      create_pod: False
+      create_pod: false
       pod_args: null
       project_name: homeassistant
       remove_orphans: true
@@ -59,6 +58,7 @@ hass:
     autoupdate: true
     autoupdate_service: false
     remove_all_data_for_sure: false
+    podman_api: true
   config_base:
     automation: '!include automations.yaml'
     default_config: null

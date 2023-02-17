@@ -1,4 +1,3 @@
-{#- -*- coding: utf-8 -*- #}
 {#- vim: ft=jinja #}
 
 {#- Make this file importable by config/file.sls -#}
@@ -67,5 +66,9 @@
     "postgres": "postgresql://{user}:{password}@127.0.0.1/{name}",
     "postgres_socket": "postgresql://@/{name}",
     }.get(mapdata.db.type ~ ("_socket" if mapdata.db.socket else ""), "") %}
-  {%- set db_url = db_fmt.format(name=mapdata.db.name, user=mapdata.db.user, password=mapdata.db.password or salt["pillar.get"](mapdata.db.password_pillar, "")) %}
+  {%- set db_url = db_fmt.format(
+        name=mapdata.db.name,
+        user=mapdata.db.user,
+        password=mapdata.db.password or salt["pillar.get"](mapdata.db.password_pillar, "")
+      ) %}
 {%- endif %}
