@@ -51,7 +51,7 @@ Home Assistant compose file is absent:
 
 Home Assistant podman API is unavailable:
   compose.systemd_service_dead:
-    - name: podman
+    - name: podman.socket
     - user: {{ hass.lookup.user.name }}
     - onlyif:
       - fun: user.info
@@ -59,7 +59,7 @@ Home Assistant podman API is unavailable:
 
 Home Assistant podman API is disabled:
   compose.systemd_service_disabled:
-    - name: podman
+    - name: podman.socket
     - user: {{ hass.lookup.user.name }}
     - onlyif:
       - fun: user.info

@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/lkubb/salt-template-formula-compose",
-  "commit": "249eb39f6241fe5718691b21f7e7d82b962c8aa3",
+  "commit": "d261bbd33723b1b8df5d67d58918868e3d70d76b",
   "checkout": null,
   "context": {
     "cookiecutter": {
@@ -21,7 +21,7 @@
       "project_name": "homeassistant",
       "containers": "homeassistant,influxdb,mariadb,postgres",
       "git_username": "lkubb",
-      "_lookup": {
+      "lookup": {
         "compose": {
           "create_pod": false
         },
@@ -56,14 +56,14 @@
           ]
         }
       },
-      "_settings": {
+      "settings": {
         "config_base": {
           "default_config": null,
           "homeassistant": {
             "name": "Home Assistant",
-            "latitude": 0,
-            "longitude": 0,
-            "elevation": 0,
+            "latitude": "0",
+            "longitude": "0",
+            "elevation": "0",
             "unit_system": "metric",
             "currency": "USD",
             "time_zone": "Etc/UTC",
@@ -100,7 +100,7 @@
             "appdaemon": true,
             "netdaemon": true,
             "country": null,
-            "release_limit": 5,
+            "release_limit": "5",
             "experimental": false
           },
           "install": true

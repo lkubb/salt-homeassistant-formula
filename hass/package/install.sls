@@ -49,14 +49,14 @@ Home Assistant paths are present:
 
 Home Assistant podman API is enabled:
   compose.systemd_service_enabled:
-    - name: podman
+    - name: podman.socket
     - user: {{ hass.lookup.user.name }}
     - require:
       - Home Assistant user session is initialized at boot
 
 Home Assistant podman API is available:
   compose.systemd_service_running:
-    - name: podman
+    - name: podman.socket
     - user: {{ hass.lookup.user.name }}
     - require:
       - Home Assistant user session is initialized at boot
