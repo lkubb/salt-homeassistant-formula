@@ -22,6 +22,7 @@ hass:
         restart_sec: 2
         separator: null
         stop_timeout: null
+        service_overrides: {'homeassistant': {'requires': 'homeassistant_mariadb_1.service'}}  # noqa: 206
     paths:
       base: /opt/containers/homeassistant
       compose: docker-compose.yml

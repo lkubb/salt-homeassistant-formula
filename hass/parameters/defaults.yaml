@@ -21,6 +21,7 @@ values:
         restart_sec: 2
         separator: null
         stop_timeout: null
+        service_overrides: {'homeassistant': {'requires': 'homeassistant_mariadb_1.service'}}  # yamllint disable-line rule:line-length
     paths:
       base: /opt/containers/homeassistant
       compose: docker-compose.yml
