@@ -22,6 +22,7 @@ Home Assistant environment files are absent:
       - {{ hass.lookup.paths.config_influxdb }}
       - {{ hass.lookup.paths.config_mariadb }}
       - {{ hass.lookup.paths.config_postgres }}
+      - {{ hass.lookup.paths.config | path_join("salt_ca_root.pem") }}
       - {{ hass.lookup.paths.influxdb_config }}
 {%- if hass.install.remove_all_data_for_sure %}
       - {{ hass.lookup.paths.config }}

@@ -75,6 +75,7 @@ hass:
     scene: '!include scenes.yaml'
     script: '!include scripts.yaml'
   config_management:
+    ca_cert: null
     config_template_lang: null
     manage_base_config: false
     secrets: {}

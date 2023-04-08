@@ -33,6 +33,9 @@ hass:
     script: '!include scripts.yaml'
     # Settings related to Salt management of config files
   config_management:
+      # Manage the contents of a PEM-encoded certificate file to be used
+      # in CA cert trust settings.
+    ca_cert: null
       # When Home Assistant configuration files are provided in files/<TOFS>/config,
       # they are synced recursively. To avoid issues with Jinja rendering, by default
       # they are treated literally. You can set this to valid Salt renderers to treat

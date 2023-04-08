@@ -81,6 +81,7 @@
           "scene": "!include scenes.yaml"
         },
         "config_management": {
+          "ca_cert": null,
           "config_template_lang": null,
           "manage_base_config": false,
           "secrets_manage": true,

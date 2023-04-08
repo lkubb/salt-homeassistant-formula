@@ -192,6 +192,22 @@ Home Assistant secrets are synced from pillar:
       - Home Assistant is installed
 {%- endif %}
 
+{%- if hass.config_management.ca_cert %}
+
+Home Assistant CA certificate is managed:
+  x509.pem_managed:
+    - name: {{ hass.lookup.paths.config | path_join("salt_ca_root.pem") }}
+    - text: {{ hass.config_management.ca_cert | json }}
+    - mode: '0644'
+    - user: {{ hass.lookup.user.name }}
+    - group: {{ hass.lookup.user.name }}
+    - makedirs: True
+    - require:
+      - user: {{ hass.lookup.user.name }}
+    - watch_in:
+      - Home Assistant is installed
+{%- endif %}
+
 {%- if hass.influxdb.install and hass.influxdb.config %}
 
 InfluxDB config is managed:
