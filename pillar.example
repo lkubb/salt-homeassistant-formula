@@ -76,6 +76,9 @@ hass:
       # This might fail with postgres without further configuration.
     socket: false
     user: hass
+      # If the database is MariaDB and is managed by this formula in a container,
+      # automatically upgrade databases if required
+    autoupgrade: true
     # Settings regarding HACS (Home Assistant Community Store)
   hacs:
       # Choose whether to serialize the configuration specified in hass:hacs:config

@@ -84,6 +84,7 @@ hass:
   container:
     devices: []
   db:
+    autoupgrade: true
     name: hass
     password: null
     password_pillar: null

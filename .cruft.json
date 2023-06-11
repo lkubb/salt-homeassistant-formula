@@ -97,7 +97,8 @@
           "user": "hass",
           "password": null,
           "password_pillar": null,
-          "socket": false
+          "socket": false,
+          "autoupgrade": true
         },
         "hacs": {
           "apply_yaml_config": false,
