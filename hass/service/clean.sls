@@ -1,6 +1,5 @@
 # vim: ft=sls
 
-
 {#-
     Stops the homeassistant, influxdb, mariadb, postgres container services
     and disables them at boot time.

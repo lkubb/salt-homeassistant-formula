@@ -2,7 +2,7 @@
 
 {%- set tplroot = tpldir.split("/")[0] %}
 {%- from tplroot ~ "/map.jinja" import mapdata as hass with context %}
-{%- from tplroot ~ "/libtofs.jinja" import files_switch with context %}
+{%- from tplroot ~ "/libtofsstack.jinja" import files_switch with context %}
 
 {%- set extmod_list = salt["saltutil.list_extmods"]() %}
 
@@ -65,14 +65,16 @@ Home Assistant podman API is available:
 Home Assistant compose file is managed:
   file.managed:
     - name: {{ hass.lookup.paths.compose }}
-    - source: {{ files_switch(["docker-compose.yml", "docker-compose.yml.j2"],
-                              lookup="Home Assistant compose file is present"
+    - source: {{ files_switch(
+                    ["docker-compose.yml", "docker-compose.yml.j2"],
+                    config=hass,
+                    lookup="Home Assistant compose file is present",
                  )
               }}
     - mode: '0644'
     - user: root
     - group: {{ hass.lookup.rootgroup }}
-    - makedirs: True
+    - makedirs: true
     - template: jinja
     - makedirs: true
     - context:

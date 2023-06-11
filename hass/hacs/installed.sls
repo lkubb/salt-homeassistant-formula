@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # vim: ft=sls
 
-{%- set tplroot = tpldir.split('/')[0] %}
+{%- set tplroot = tpldir.split("/")[0] %}
 {%- set sls_package_install = tplroot ~ ".package.install" %}
 {%- from tplroot ~ "/map.jinja" import mapdata as hass with context %}
-{%- from tplroot ~ "/libtofs.jinja" import files_switch with context %}
+{%- from tplroot ~ "/libtofsstack.jinja" import files_switch with context %}
 
 include:
   - {{ sls_package_install }}
@@ -12,8 +11,10 @@ include:
 HACS is installed:
   archive.extracted:
     - name: {{ hass.lookup.paths.config | path_join("custom_components", "hacs") }}
-    - source: {{ files_switch(['hacs.zip'],
-                              lookup='HACS is installed',
+    - source: {{ files_switch(
+                    ["hacs.zip"],
+                    config=hass,
+                    lookup="HACS is installed",
                  )
               }}
 {%- if hass.salt_mod_github_releases %}

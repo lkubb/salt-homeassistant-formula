@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # vim: ft=sls
 
-{%- set tplroot = tpldir.split('/')[0] %}
-{%- set sls_hacs_installed = tplroot ~ '.hacs.installed' %}
+{%- set tplroot = tpldir.split("/")[0] %}
+{%- set sls_hacs_installed = tplroot ~ ".hacs.installed" %}
 {%- from tplroot ~ "/map.jinja" import mapdata as hass with context %}
-{%- from tplroot ~ "/libtofs.jinja" import files_switch with context %}
+{%- from tplroot ~ "/libtofsstack.jinja" import files_switch with context %}
 
 include:
   - {{ sls_hacs_installed }}
@@ -12,8 +11,10 @@ include:
 HACS YAML configuration is managed:
   file.managed:
     - name: {{ hass.lookup.paths.config | path_join("hacs.yaml") }}
-    - source: {{ files_switch(["hacs.yaml", "hacs.yaml.j2"],
-                              lookup='HACS YAML configuration is managed',
+    - source: {{ files_switch(
+                    ["hacs.yaml", "hacs.yaml.j2"],
+                    config=hass,
+                    lookup="HACS YAML configuration is managed",
                  )
               }}
     - template: jinja
