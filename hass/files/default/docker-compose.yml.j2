@@ -31,10 +31,10 @@ services:
     env_file:
       - {{ hass.lookup.paths.config_homeassistant }}
     volumes:
-      - {{ hass.lookup.paths.config }}:/config
+      - {{ hass.lookup.paths.config }}:/config:Z
       - /etc/localtime:/etc/localtime:ro
 {%-   if hass.db.type != "sqlite" and hass.db.socket %}
-      - hass-db-run:{{ db_run_dir }}
+      - hass-db-run:{{ db_run_dir }}:Z
 {%-   endif %}
     restart: unless-stopped
     # this is required for device/service discovery to work
@@ -61,7 +61,7 @@ services:
       - {{ hass.lookup.paths.config_influxdb }}
     volumes:
       - {{ hass.lookup.paths.influxdb_config }}:/etc/influxdb2
-      - {{ hass.lookup.paths.influxdb_data or "hass-influxdb" }}:/var/lib/influxdb2
+      - {{ hass.lookup.paths.influxdb_data or "hass-influxdb" }}:/var/lib/influxdb2:Z
     ports:
       - 127.0.0.1:8086:8086
 {%-   if hass.install.autoupdate %}
@@ -83,7 +83,7 @@ services:
       - io.containers.autoupdate=registry
 {%-   endif %}
     volumes:
-      - {{ hass.lookup.paths.mariadb or "hass-mariadb" }}:/var/lib/mysql
+      - {{ hass.lookup.paths.mariadb or "hass-mariadb" }}:/var/lib/mysql:Z
 {%-   if hass.db.socket %}
       - hass-db-run:{{ db_run_dir }}
 {%-   else %}
@@ -104,7 +104,7 @@ services:
       - io.containers.autoupdate=registry
 {%-   endif %}
     volumes:
-      - {{ hass.lookup.paths.postgres or "hass-postgres" }}:/var/lib/postgresql/data
+      - {{ hass.lookup.paths.postgres or "hass-postgres" }}:/var/lib/postgresql/data:Z
 {%-   if hass.db.socket %}
       - hass-db-run:{{ db_run_dir }}
 {%-   else %}
