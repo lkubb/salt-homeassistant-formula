@@ -34,3 +34,22 @@ Home Assistant service is running:
 {%- endif %}
     - watch:
       - Home Assistant is installed
+
+{%- if hass.firewall.manage and grains["os_family"] == "RedHat" %}
+
+Home Assistant service is known:
+  firewalld.service:
+    - name: hass
+    - ports:
+      - {{ hass.firewall.port }}/tcp
+    - require:
+      - Home Assistant service is running
+
+Home Assistant ports are open:
+  firewalld.present:
+    - name: public
+    - services:
+      - hass
+    - require:
+      - Home Assistant service is known
+{%- endif %}

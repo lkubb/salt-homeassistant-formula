@@ -115,6 +115,9 @@ hass:
       retention: null
       user: hass
     install: false
+  firewall:
+    manage: false
+    port: 8123
   salt_mod_github_releases: true
 
   tofs:

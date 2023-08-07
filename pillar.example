@@ -100,6 +100,13 @@ hass:
       # is available, it will fall back to downloading the latest release
       # from GitHub.
     install: true
+    # On RedHat family, this formula can manage firewall-cmd to ensure
+    # the HomeAssistant port is open.
+  firewall:
+      # Whether to manage firewall-cmd on RedHat.
+    manage: false
+      # The port to open.
+    port: 8123
     # InfluxDB settings
   influxdb:
       # Choose whether to install InfluxDB

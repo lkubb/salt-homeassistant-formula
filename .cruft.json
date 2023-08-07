@@ -128,6 +128,10 @@
             "admin_token_pillar": null
           }
         },
+        "firewall": {
+          "manage": false,
+          "port": 8123
+        },
         "salt_mod_github_releases": true
       },
       "_template": "https://github.com/lkubb/salt-template-formula-compose"
