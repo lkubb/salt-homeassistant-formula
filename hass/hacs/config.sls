@@ -23,9 +23,6 @@ HACS YAML configuration is managed:
     - group: {{ hass.lookup.user.name }}
     - replace: {{ hass.config_management.manage_base_config }}
     - require:
-      - user: {{ hass.lookup.user.name }}
       - sls: {{ sls_hacs_installed }}
-    - watch_in:
-      - Home Assistant is installed
     - context:
         hass: {{ hass | json }}

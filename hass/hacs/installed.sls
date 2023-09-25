@@ -29,5 +29,5 @@ HACS is installed:
     - enforce_toplevel: false
     - user: {{ hass.lookup.user.name }}
     - group: {{ hass.lookup.user.name }}
-    - watch_in:
-      - Home Assistant is installed
+    - require:
+      - user: {{ hass.lookup.user.name }}

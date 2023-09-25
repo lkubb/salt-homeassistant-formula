@@ -59,7 +59,7 @@ Home Assistant environment files are managed:
     - template: jinja
     - require:
       - user: {{ hass.lookup.user.name }}
-    - watch_in:
+    - require_in:
       - Home Assistant is installed
     - context:
         hass: {{ hass | json }}
@@ -88,8 +88,6 @@ Home Assistant configuration is synced:
     - template: {{ hass.config_management.config_template_lang or "null" }}
     - require:
       - user: {{ hass.lookup.user.name }}
-    - watch_in:
-      - Home Assistant is installed
 {%- if hass.config_management.config_template_lang %}
     - context:
         hass: {{ hass | json }}
@@ -111,8 +109,6 @@ Home Assistant base configuration is present:
     - replace: {{ hass.config_management.manage_base_config }}
     - require:
       - user: {{ hass.lookup.user.name }}
-    - watch_in:
-      - Home Assistant is installed
     - context:
         hass: {{ hass | json }}
 {%- if hass.db.type != "sqlite" %}
@@ -160,8 +156,6 @@ Home Assistant managed secrets are synced:
     - makedirs: true
     - require:
       - user: {{ hass.lookup.user.name }}
-    - watch_in:
-      - Home Assistant is installed
     - dataset:
 {%-   if hass.db.type != "sqlite" %}
         db_url: {{ db_url }}
@@ -184,8 +178,6 @@ Home Assistant secrets are synced:
     - makedirs: true
     - require:
       - user: {{ hass.lookup.user.name }}
-    - watch_in:
-      - Home Assistant is installed
     - dataset: {{ hass.config_management.secrets | json }}
 {%- endif %}
 
@@ -203,8 +195,6 @@ Home Assistant secrets are synced from pillar:
     - makedirs: true
     - require:
       - user: {{ hass.lookup.user.name }}
-    - watch_in:
-      - Home Assistant is installed
 {%- endif %}
 
 {%- if hass.config_management.ca_cert %}
@@ -219,8 +209,6 @@ Home Assistant CA certificate is managed:
     - makedirs: true
     - require:
       - user: {{ hass.lookup.user.name }}
-    - watch_in:
-      - Home Assistant is installed
 {%- endif %}
 
 {%- if hass.influxdb.install and hass.influxdb.config %}
