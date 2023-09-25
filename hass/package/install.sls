@@ -10,9 +10,9 @@ Custom modules are present for hass:
   saltutil.sync_all:
     - refresh: true
     - unless:
-      - {{ "compose" in extmod_list.get("states", []) }}
+      - '{{ ("compose" in extmod_list.get("states", [])) | lower }}'
 {%- if hass.salt_mod_github_releases %}
-      - {{ "github_releases" in extmod_list.get("states", []) }}
+      - '{{ ("github_releases" in extmod_list.get("states", [])) | lower }}'
 {%- endif %}
 
 Home Assistant user account is present:
