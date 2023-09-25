@@ -44,6 +44,25 @@ values:
       shell: /usr/sbin/nologin
       uid: null
       gid: null
+    config_sync_include: []
+    config_sync_exclude:
+      - .HA_VERSION
+      - E@\.storage(/.*)?$
+      - E@\.cloud(/.*)?$
+      - E@backups(/.*)?$
+      - E@custom_components(/.*)?$
+      - E@deps(/.*)?$
+      - E@tts(/.*)?$
+      - E@.*.pem$
+      - E@.*.log(\.fault)?$
+      - automations.yaml
+      - blueprints/automation/homeassistant/motion_light.yaml
+      - blueprints/automation/homeassistant/notify_leaving_zone.yaml
+      - blueprints/script/homeassistant/confirmable_notification.yaml
+      - scripts.yaml
+      - secrets.yaml
+      - scenes.yaml
+      - '*.log*'
     containers:
       homeassistant:
         image: ghcr.io/home-assistant/home-assistant:stable
@@ -78,6 +97,7 @@ values:
     script: '!include scripts.yaml'
   config_management:
     ca_cert: null
+    clean_config: false
     config_template_lang: null
     manage_base_config: false
     secrets: {}

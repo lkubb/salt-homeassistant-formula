@@ -78,6 +78,9 @@ Home Assistant configuration is synced:
     - user: {{ hass.lookup.user.name }}
     - group: {{ hass.lookup.user.name }}
     - makedirs: true
+    - clean: {{ hass.config_management.clean_config }}
+    - exclude_pat: {{ hass.lookup.config_sync_exclude | json }}
+    - include_pat: {{ hass.lookup.config_sync_include | json }}
     # since home assistant uses Jinja for templates as well,
     # template rendering is turned off by default. you can either
     # use a different templating engine - e.g. mako - or wrap all

@@ -36,6 +36,12 @@ hass:
       # Manage the contents of a PEM-encoded certificate file to be used
       # in CA cert trust settings.
     ca_cert: null
+      # Whether to clean unknown files from the Home Assistant configuration
+      # directory. This removes previously synced, now removed files, but
+      # it might also remove Home Assistant files! In case you enable this,
+      # ensure to have regular backups, the list in lookup:config_sync_exclude
+      # is up to date.
+    clean_config: false
       # When Home Assistant configuration files are provided in files/<TOFS>/config,
       # they are synced recursively. To avoid issues with Jinja rendering, by default
       # they are treated literally. You can set this to valid Salt renderers to treat
@@ -173,6 +179,25 @@ hass:
       shell: /usr/sbin/nologin
       uid: null
       gid: null
+    config_sync_include: []
+    config_sync_exclude:
+      - .HA_VERSION
+      - E@\.storage(/.*)?$
+      - E@\.cloud(/.*)?$
+      - E@backups(/.*)?$
+      - E@custom_components(/.*)?$
+      - E@deps(/.*)?$
+      - E@tts(/.*)?$
+      - E@.*.pem$
+      - E@.*.log(\.fault)?$
+      - automations.yaml
+      - blueprints/automation/homeassistant/motion_light.yaml
+      - blueprints/automation/homeassistant/notify_leaving_zone.yaml
+      - blueprints/script/homeassistant/confirmable_notification.yaml
+      - scripts.yaml
+      - secrets.yaml
+      - scenes.yaml
+      - '*.log*'
     containers:
       homeassistant:
         image: ghcr.io/home-assistant/home-assistant:stable
