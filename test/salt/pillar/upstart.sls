@@ -70,6 +70,7 @@ hass:
         image: docker.io/library/mariadb:latest
       postgres:
         image: docker.io/library/postgres:latest
+    dbus_path: /run/dbus
     hacs:
       hash: ''
       repo: hacs/integration
@@ -102,6 +103,7 @@ hass:
     secrets_manage: true
     secrets_pillar: ''
   container:
+    dbus: false
     devices: []
   db:
     autoupgrade: true

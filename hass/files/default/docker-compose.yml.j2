@@ -36,6 +36,14 @@ services:
 {%-   if hass.db.type != "sqlite" and hass.db.socket %}
       - hass-db-run:{{ db_run_dir }}:Z
 {%-   endif %}
+{%-   if hass.container.dbus %}
+      - {{ hass.lookup.dbus_path }}:/run/dbus:ro
+    # Bluetooth passthrough requires privileged mode when run
+    # as rootless sadly. That seems to be a bug in libdbus (dbus-python).
+    # A hacky fix is included here if you want to avoid the need:
+    # https://community.home-assistant.io/t/bluetooth-and-docker-part-2/447334/11
+    privileged: true
+{%-   endif %}
     restart: unless-stopped
     # this is required for device/service discovery to work
     # (broadcast traffic is not forwarded)

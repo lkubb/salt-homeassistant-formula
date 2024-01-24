@@ -65,6 +65,10 @@ hass:
     secrets_pillar: ''
     # Settings specific to HA container
   container:
+      # Passthrough /run/dbus, required for Bluetooth integration.
+      # Note that Linux kernel 4.15 and above is highly recommended.
+      # That excludes all RHEL 9 derivatives by default currently.
+    dbus: false
       # List of devices that are mapped into the container. The syntax is exactly
       # like you would write inside a docker-compose.yml file.
     devices: []
@@ -207,6 +211,7 @@ hass:
         image: docker.io/library/mariadb:latest
       postgres:
         image: docker.io/library/postgres:latest
+    dbus_path: /run/dbus
     hacs:
       hash: ''
       repo: hacs/integration

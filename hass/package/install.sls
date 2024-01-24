@@ -93,6 +93,10 @@ Home Assistant is installed:
     - {{ param }}: {{ val }}
 {%-   endif %}
 {%- endfor %}
+{%- if hass.install.rootless and hass.container.dbus %}
+    - podman_create_args:
+      - userns: keep-id
+{%- endif %}
     - watch:
       - file: {{ hass.lookup.paths.compose }}
 {%- if hass.install.rootless %}
