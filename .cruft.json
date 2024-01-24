@@ -22,6 +22,12 @@
       "containers": "homeassistant,influxdb,mariadb,postgres",
       "git_username": "lkubb",
       "lookup": {
+        "bluetooth": {
+          "pkgs": [
+            "dbus-broker",
+            "bluez"
+          ]
+        },
         "config_sync_include": [],
         "config_sync_exclude": [
           ".HA_VERSION",
@@ -85,6 +91,9 @@
         }
       },
       "settings": {
+        "bluetooth": {
+          "enable": false
+        },
         "config_base": {
           "default_config": null,
           "homeassistant": {

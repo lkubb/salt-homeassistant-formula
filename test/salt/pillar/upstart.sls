@@ -42,6 +42,10 @@ hass:
       shell: /usr/sbin/nologin
       uid: null
       gid: null
+    bluetooth:
+      pkgs:
+        - dbus-broker
+        - bluez
     config_sync_include: []
     config_sync_exclude:
       - .HA_VERSION
@@ -80,6 +84,8 @@ hass:
     autoupdate_service: false
     remove_all_data_for_sure: false
     podman_api: true
+  bluetooth:
+    enable: false
   config_base:
     automation: '!include automations.yaml'
     default_config: null

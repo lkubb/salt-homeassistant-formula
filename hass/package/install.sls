@@ -80,6 +80,15 @@ Home Assistant compose file is managed:
     - context:
         hass: {{ hass | json }}
 
+{%- if hass.bluetooth.enable %}
+
+Bluez and dbus-broker are installed for Home Assistant:
+  pkg.installed:
+    - pkgs: {{ hass.lookup.bluetooth.pkgs | json }}
+    - require_in:
+      - Home Assistant is installed
+{%- endif %}
+
 Home Assistant is installed:
   compose.installed:
     - name: {{ hass.lookup.paths.compose }}

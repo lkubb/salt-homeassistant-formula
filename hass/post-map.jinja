@@ -72,3 +72,11 @@
         password=mapdata.db.password or salt["pillar.get"](mapdata.db.password_pillar, "")
       ) %}
 {%- endif %}
+
+{#-
+    If Bluetooth is enabled, the DBus must be passed through as well.
+-#}
+
+{%- if mapdata.bluetooth.enable %}
+{%-   do mapdata.container.update({"dbus": true}) %}
+{%- endif %}
