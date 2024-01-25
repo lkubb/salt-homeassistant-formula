@@ -15,12 +15,12 @@
 {%-       set db_run_dir = "/var/run/postgresql" %}
 {%-     endif %}
 {%-   endif %}
-{%-   if hass.influxdb.install and not hass.lookup.paths.influxdb_data %}
-{%-     do misc_volumes.append("hass-influxdb") %}
-{%-   endif %}
 {%-   if hass.db.socket %}
 {%-     do misc_volumes.append("hass-db-run") %}
 {%-   endif %}
+{%- endif %}
+{%- if hass.influxdb.install and not hass.lookup.paths.influxdb_data %}
+{%-   do misc_volumes.append("hass-influxdb") %}
 {%- endif %}
 ---
 version: '3'
