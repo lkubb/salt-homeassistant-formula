@@ -84,7 +84,7 @@ hass:
     type: sqlite
     name: hass
       # If password and password_pillar are left unset, this formula will
-      # autogenerate a password and save it in a grain value (unsafe).
+      # autogenerate a password and save it in the homeassistant user home dir.
     password: null
     password_pillar: null
       # Instead of using TCP, map the socket directly into the container.
