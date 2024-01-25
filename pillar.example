@@ -78,9 +78,17 @@ hass:
       # like you would write inside a docker-compose.yml file.
     devices: []
     # Database settings
+    # Note that the generated homeassistant service will not depend on
+    # the database service. If you're using this formula to manage it,
+    # you should add the service to
+    # lookup:compose:service:service_overrides:homeassistant:requires, e.g.
+    # as `homeassistant_mariadb_1.service`
   db:
       # sqlite is default and does not need the rest of the settings.
-      # also possible: mariadb, postgres
+      # Also possible: mariadb, postgres.
+      # If you want to connect to an external MariaDB/PostgreSQL/MySQL
+      # database, just leave this at `sqlite` and setup the `recorder`
+      # integration manually.
     type: sqlite
     name: hass
       # If password and password_pillar are left unset, this formula will
@@ -168,7 +176,6 @@ hass:
         restart_sec: 2
         separator: null
         stop_timeout: null
-        service_overrides: {'homeassistant': {'requires': 'homeassistant_mariadb_1.service'}}  # yamllint disable-line rule:line-length
     paths:
       base: /opt/containers/homeassistant
       compose: docker-compose.yml

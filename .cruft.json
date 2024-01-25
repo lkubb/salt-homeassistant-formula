@@ -49,13 +49,6 @@
           "*.log*"
         ],
         "compose": {
-          "service": {
-            "service_overrides": {
-              "homeassistant": {
-                "requires": "homeassistant_mariadb_1.service"
-              }
-            }
-          },
           "create_pod": false
         },
         "containers": {
