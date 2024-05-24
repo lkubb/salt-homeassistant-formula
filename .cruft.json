@@ -32,13 +32,13 @@
         "config_sync_exclude": [
           ".HA_VERSION",
           "E@\\.storage(/.*)?$",
-          "E@.cloud(/.*)?$",
+          "E@\\.cloud(/.*)?$",
           "E@backups(/.*)?$",
           "E@custom_components(/.*)?$",
           "E@deps(/.*)?$",
           "E@tts(/.*)?$",
-          "E@.*.pem$",
           "E@.*.log(\\.fault)?$",
+          "E@additional_ca(/.*\\.pem)?$",
           "automations.yaml",
           "blueprints/automation/homeassistant/motion_light.yaml",
           "blueprints/automation/homeassistant/notify_leaving_zone.yaml",
@@ -71,6 +71,7 @@
           "repo": "hacs/integration"
         },
         "paths": {
+          "ca_cert": "additional_ca/salt_ca.pem",
           "config": "config",
           "influxdb_config": "influxdb_config",
           "influxdb_data": "influxdb_data",
@@ -123,7 +124,8 @@
           "password": null,
           "password_pillar": null,
           "socket": false,
-          "autoupgrade": true
+          "autoupgrade": true,
+          "extra_params": {}
         },
         "hacs": {
           "apply_yaml_config": false,

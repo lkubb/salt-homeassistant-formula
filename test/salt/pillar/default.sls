@@ -29,6 +29,7 @@ hass:
       config_influxdb: influxdb.env
       config_mariadb: mariadb.env
       config_postgres: postgres.env
+      ca_cert: additional_ca/salt_ca.pem
       config: config
       influxdb_config: influxdb_config
       influxdb_data: influxdb_data
@@ -54,8 +55,8 @@ hass:
       - E@custom_components(/.*)?$
       - E@deps(/.*)?$
       - E@tts(/.*)?$
-      - E@.*.pem$
       - E@.*.log(\.fault)?$
+      - E@additional_ca(/.*\.pem)?$
       - automations.yaml
       - blueprints/automation/homeassistant/motion_light.yaml
       - blueprints/automation/homeassistant/notify_leaving_zone.yaml
@@ -112,6 +113,7 @@ hass:
     devices: []
   db:
     autoupgrade: true
+    extra_params: {}
     name: hass
     password: null
     password_pillar: null
@@ -178,7 +180,7 @@ hass:
     # For testing purposes
     source_files:
       Home Assistant environment file is managed:
-      - hass.env.j2
+        - hass.env.j2
 
   # Just for testing purposes
   winner: pillar

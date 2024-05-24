@@ -201,7 +201,7 @@ Home Assistant secrets are synced from pillar:
 
 Home Assistant CA certificate is managed:
   x509.pem_managed:
-    - name: {{ hass.lookup.paths.config | path_join("salt_ca_root.pem") }}
+    - name: {{ hass.lookup.paths.config | path_join(hass.lookup.paths.ca_cert) }}
     - text: {{ hass.config_management.ca_cert | json }}
     - mode: '0644'
     - user: {{ hass.lookup.user.name }}

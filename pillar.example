@@ -99,6 +99,11 @@ hass:
       # This might fail with postgres without further configuration.
     socket: false
     user: hass
+      # Include extra parameters in the DB URI query part.
+      # Example:
+      #   ssl_ca: /config/additional_ca/salt_ca.pem (MariaDB)
+      #   ssh_cipher: /config/additional_ca/salt_ca.pem (PostgreSQL)
+    extra_params: {}
       # If the database is MariaDB and is managed by this formula in a container,
       # automatically upgrade databases if required
     autoupgrade: true
@@ -183,6 +188,7 @@ hass:
       config_influxdb: influxdb.env
       config_mariadb: mariadb.env
       config_postgres: postgres.env
+      ca_cert: additional_ca/salt_ca.pem
       config: config
       influxdb_config: influxdb_config
       influxdb_data: influxdb_data
@@ -208,8 +214,8 @@ hass:
       - E@custom_components(/.*)?$
       - E@deps(/.*)?$
       - E@tts(/.*)?$
-      - E@.*.pem$
       - E@.*.log(\.fault)?$
+      - E@additional_ca(/.*\.pem)?$
       - automations.yaml
       - blueprints/automation/homeassistant/motion_light.yaml
       - blueprints/automation/homeassistant/notify_leaving_zone.yaml

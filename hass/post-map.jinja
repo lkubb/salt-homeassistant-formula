@@ -9,6 +9,9 @@
 
 {%- set base_path = mapdata.lookup.paths.base %}
 {%- for path, val in mapdata.lookup.paths.items() %}
+  {%- if path == "ca_cert" %}
+    {%- continue %}
+  {%- endif %}
   {%- if val and val is string and not val.startswith("/") %}
     {%- do mapdata.lookup.paths.update({path: base_path | path_join(val)}) %}
   {%- endif %}
@@ -60,17 +63,18 @@
 -#}
 
 {%- if mapdata.db.type != "sqlite" %}
-  {%- set db_fmt = {
-    "mariadb": "mysql://{user}:{password}@127.0.0.1/{name}?charset=utf8mb4",
-    "mariadb_socket": "mysql://{user}:{password}@localhost/{name}?unix_socket=/var/run/mysqld/mysqld.sock&charset=utf8mb4",
-    "postgres": "postgresql://{user}:{password}@127.0.0.1/{name}",
-    "postgres_socket": "postgresql://@/{name}",
+  {%- set db_fmt, query = {
+    "mariadb": ["mysql://{user}:{password}@127.0.0.1/{name}", {"charset": "utf8mb4"}],
+    "mariadb_socket": ["mysql://{user}:{password}@localhost/{name}", {"unix_socket": "/var/run/mysqld/mysqld.sock", "charset": "utf8mb4"}],
+    "postgres": ["postgresql://{user}:{password}@127.0.0.1/{name}", {}],
+    "postgres_socket": ["postgresql://@/{name}", {}],
     }.get(mapdata.db.type ~ ("_socket" if mapdata.db.socket else ""), "") %}
+  {%- do query.update(mapdata.db.extra_params) %}
   {%- set db_url = db_fmt.format(
         name=mapdata.db.name,
         user=mapdata.db.user,
         password=mapdata.db.password or salt["pillar.get"](mapdata.db.password_pillar, "")
-      ) %}
+      ) %} + "?" + (query | urlencode)
 {%- endif %}
 
 {#-
