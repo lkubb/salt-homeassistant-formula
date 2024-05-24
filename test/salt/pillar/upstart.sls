@@ -111,6 +111,7 @@ hass:
   container:
     dbus: false
     devices: []
+    environment: {}
   db:
     autoupgrade: true
     extra_params: {}

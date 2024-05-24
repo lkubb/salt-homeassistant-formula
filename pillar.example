@@ -77,6 +77,10 @@ hass:
       # List of devices that are mapped into the container. The syntax is exactly
       # like you would write inside a docker-compose.yml file.
     devices: []
+      # Extra environment variables for the container. Might be useful
+      # for setting REQUESTS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt,
+      # for example.
+    environment: {}
     # Database settings
     # Note that the generated homeassistant service will not depend on
     # the database service. If you're using this formula to manage it,

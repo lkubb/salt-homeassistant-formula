@@ -115,7 +115,8 @@
         },
         "container": {
           "dbus": false,
-          "devices": []
+          "devices": [],
+          "environment": {}
         },
         "db": {
           "type": "sqlite",
